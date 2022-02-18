@@ -17,6 +17,7 @@ parameters:
     type: CREDENTIALS
     defaultValue: cloudbees-ci-pipeline-workshop-github-app
   - name: imageName
+    type: string
     displayName: Image Name
     defaultValue: nginx
 multibranch:
