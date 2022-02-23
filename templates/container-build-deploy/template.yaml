@@ -16,9 +16,9 @@ parameters:
     displayName: GitHub Credential ID
     type: CREDENTIALS
     defaultValue: cloudbees-ci-pipeline-workshop-github-app
-  - name: imageName
+  - name: baseImageName
     type: string
-    displayName: Image Name
+    displayName: Base Image Name
     defaultValue: nginx
 multibranch:
   branchSource:
