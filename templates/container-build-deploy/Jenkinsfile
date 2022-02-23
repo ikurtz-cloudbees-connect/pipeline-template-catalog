@@ -8,14 +8,12 @@ pipeline {
     timeout(time: 10, unit: 'MINUTES')
   }
   triggers {
-    eventTrigger jmespathquery("event=='imageUpdate' && name=='${imageName}:${imageTag}'")
+    eventTrigger jmespathquery("image.action=='update' && image.name=='${baseImageName}'")
   }
   environment {
     REPO_OWNER = "${repoOwner}"
     REPO_NAME = "${repository}"
     GITHUB_CREDENTIAL_ID = "${githubCredentialId}"
-    IMAGE_NAME = "${imageName}"
-    IMAGE_TAG = "${imageTag}"
   }
   stages {
     stage('Staging PR') {
@@ -23,7 +21,7 @@ pipeline {
         beforeAgent true
         anyOf {
           branch 'pr-*'
-          branch 'main'
+          triggeredBy 'EventTriggerCause'
         }
       }
       environment {
@@ -41,14 +39,6 @@ pipeline {
           }
         }
         stage('Deploy: Staging') {
-          when {
-            beforeAgent true
-            anyOf {
-              branch 'main'
-              branch 'pr*'
-              triggeredBy 'EventTriggerCause' 
-            }
-          }
           steps {  
             echo "deploying commit $SHORT_COMMIT for ${REPO_OWNER}/${REPO_NAME}"
             helmDeploy(REPO_OWNER, env.SHORT_COMMIT) {
